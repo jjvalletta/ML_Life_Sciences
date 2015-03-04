@@ -138,7 +138,7 @@ mathematical definition
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Where is clustering used?}
-\begin{description}[Mathematical chemistry:]\addtolength{\itemsep}{0.1\baselineskip}
+\begin{description}[Mathematical chemistry:]\addtolength{\itemsep}{0.5\baselineskip}
 	\item [Biological systematics:] finding organisms sharing similar attributes
 	\item [Computer vision:] segmenting a digital image for object recognition
 	\item [Epidemiology:] identifying geographical clusters of diseases
@@ -247,7 +247,9 @@ What is the distance $d(\mathbf{a,\ b})$ between $\mathbf{a}$ and $\mathbf{b}$?
 \begin{frame}[fragile]
 \frametitle{$k$-means clustering}
 \begin{lstlisting}[style=RCode]
-fit <- kmeans(x=data, centers=k)
+fit <- kmeans(x, centers)
+# x - numeric matrix of data
+# centers - no. of clusters k 
 \end{lstlisting}
 \begin{enumerate}\addtolength{\itemsep}{0.5\baselineskip}
 	\item<2-> Select $k$ centroids at random
@@ -293,8 +295,11 @@ fit <- kmeans(x=data, centers=k)
 \begin{frame}[fragile]
 \frametitle{Agglomerative hierarchical clustering}
 \begin{lstlisting}[style=RCode]
-d <- dist(as.matrix(data), method = "euclidean") # Distance method
-fit <- hclust(d, method = "complete") # Linkage function
+d <- dist(as.matrix(data), method)
+# data - data frame 
+# method - distance method e.g "euclidean" or "manhattan"
+fit <- hclust(d, method) 
+# method - linkage function e.g "complete" or "single"
 \end{lstlisting}
 \begin{enumerate}\addtolength{\itemsep}{0.5\baselineskip}
 	\item<2-> Assign each data point as its own cluster
@@ -356,7 +361,9 @@ How do we calculate the inter-cluster distance? The \textit{linkage function}
 \frametitle{Gaussian mixture models}
 \begin{lstlisting}[style=RCode]
 library(mclust)
-fit <- Mclust(data, G=k) # G is no. of Gaussians
+fit <- Mclust(data, G)
+# data - data frame 
+# G - no. of Gaussians
 \end{lstlisting}
 \begin{enumerate}
 	\item Fit $k$ multivariate Gaussian distributions
@@ -436,13 +443,13 @@ taken to deduce the appropriate number of clusters
 \vfill
 \begin{lstlisting}[style=RCode]
 library(NbClust)
-NbClust(data, distance="euclidean", method="kmeans", min.nc=2, 
-        max.nc=10, index="all")
-# distance - similarity measure
-# method - clustering algorithm
+NbClust(data, distance, method, min.nc, max.nc, index)
+# data - data frame 
+# distance - similarity measure e.g "euclidean"
+# method - clustering algorithm e.g "kmeans"
 # min.nc - min number of clusters to consider
 # max.nc - max number of clusters to consider
-# index - which indices to compute
+# index - which indices to compute, "all" computes all of them
 \end{lstlisting}
 \vfill
 \textbf{Note}: These indices can \textit{only} give us a ballpark range for the correct number of clusters
