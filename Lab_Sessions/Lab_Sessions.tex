@@ -454,19 +454,18 @@ The cartographic attributes are:
 
 For infortmation on wilderness area designation and soil type please check \href{https://archive.ics.uci.edu/ml/machine-learning-databases/covtype/covtype.info}{additional information},
 however it is not essential for the purpose of this exercise. Let us start by reading the 
-dataset in and split it into a training and testing dataset.
-\\\\
-ADD A NOTE TO LOCATE WHERE THE DATA FILE IS ONCE I DECIDE WHERE TO PUT IT\\
-MAYBE PUT IT ON GITHUB THEN JUST DO A GET FROM THERE...
+dataset\footnote{For convenience I have uploaded it to my GitHub space and can be easily accessed using the \texttt{RCurl} package} in and split it into a training and testing dataset.
 \\
 \begin{lstlisting}[style=RCode]
-data <- read.table("ForestCoverData.csv", header=T, sep=",", skip=0) # Takes a few secs
+library(RCurl) # To compose general HTTP requests 
+dataPath <- getURL("https://raw.githubusercontent.com/jjvalletta/ML_Life_Sciences/master/Lab_Sessions/Data/ForestCoverData.csv") # Location of dataset
+data <- read.table(text=dataPath, header=T, sep=",", skip=0) # Use a text connection
 data <- data[complete.cases(data), ] # Only 2 cases of missing data so ignore
-data$Cover_Type <- factor(data$Cover_Type) # Convert to a factor
+data$Cover_Type <- factor(data$Cover_Type)
 NTOTAL <- dim(data)[1] # Total number of observations
-NTRAIN <- 12000 # Let us use this many training datapoints and the rest for testing
+NTRAIN <- 12000 # Let us use this many training datapoints
 set.seed(101) # Just so we can reproduce results
-trainIndices <- sample(x=NTOTAL, size=NTRAIN, replace=FALSE)
+trainIndices <- sample(x=NTOTAL, size=NTRAIN, replace=FALSE) 
 \end{lstlisting}
 
 Let us start by fitting a simple decision tree to the data.

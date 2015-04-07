@@ -132,7 +132,9 @@ points(data[, 2], data[, 3], pch=20, col="blue", cex=0.5) # plot a point for eve
 #-----------------------------------------------------------------------------#
 # 5) Predicting forest cover type from cartographic attributes
 #-----------------------------------------------------------------------------#
-data <- read.table("ForestCoverData.csv", header=T, sep=",", skip=0)
+library(RCurl) # To compose general HTTP requests 
+dataPath <- getURL("https://raw.githubusercontent.com/jjvalletta/ML_Life_Sciences/master/Lab_Sessions/Data/ForestCoverData.csv")
+data <- read.table(text=dataPath, header=T, sep=",", skip=0) # Read using a text connection
 data <- data[complete.cases(data), ] # Only 2 cases of missing data so ignore
 data$Cover_Type <- factor(data$Cover_Type)
 NTOTAL <- dim(data)[1] # Total number of observations
