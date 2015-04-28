@@ -35,27 +35,35 @@ scatterplot3d(x=iris$Sepal.Length,
 # 4) Assigns data points to their closest centroids
 # 5) Continues steps 3 and 4 until the observations are not reassigned or the maximum number of iterations (R uses 10 as a default) is reached.
 
-set.seed(102)
+set.seed(110)
 x <- iris[, c(4, 1)]
 N <- dim(x)[1]
 D <- dim(x)[2]
 k <- 3
 maxIter <- 10
 iiCentres <- sample(N, k)
-centres <- x[iiCentres, ]
+# Normalise features for distance calculation
+meanX <- apply(x, 2, mean)
+stdX <- apply(x, 2, sd)
+normX <- sweep(x, 2, meanX, FUN="-")
+normX <- sweep(normX, 2, stdX, FUN="/")
+normCentres <- normX[iiCentres, ]
 clustAssign <- rep(NA, N)
 for (i in seq(maxIter)) {
-    xDist <- rdist(centres, x) # Compute distance between centres and every pt.   
+    xDist <- rdist(normCentres, normX) # Compute distance between centres and every pt.   
     clustAssign <- apply(xDist, 2, which.min) # Assign cluster 
     # Plot results
     pdf(paste("Iteration", i, ".pdf", sep=""), paper="a4r")
     plot(x[, 1], x[, 2], col=clustAssign, main=paste("Iteration", i), xlim=c(0, 2.6), 
          ylim=c(4, 8), xlab="petal width (cm)", ylab="sepal length (cm)")
+    # Display unnormalised centres
+    centres <- sweep(normCentres, 2, stdX, FUN="*")
+    centres <- sweep(centres, 2, meanX, FUN="+")
     points(centres, pch=15, cex=2, col=seq(k))
     dev.off()
     # Recompute centres
     for (j in seq(k)) {
-        centres[j, ] <- colMeans(x[clustAssign==j, ])
+        normCentres[j, ] <- colMeans(normX[clustAssign==j, ])
     }
 }
 
@@ -125,3 +133,12 @@ dev.off()
 library(NbClust)
 xData <- iris[, -5]
 NbClust(data=xData, distance="euclidean", min.nc=2, max.nc=10, method="kmeans", index="all")
+
+#-----------------------------------------------------------------------------#
+# Classification figure for Introduction slides
+x <- seq(from=-5, to=5, by=0.01)
+plot(x, dnorm(x, mean=-1.5, sd=1), col="red", ylim=c(0, 0.45), lwd=4, type="l", 
+     xlab="antibody level", ylab="probability density")
+text(-1.5, 0.42, "susceptible", col="red")
+lines(x, dnorm(x, mean=1.5, sd=1), col="blue", lwd=4)
+text(1.5, 0.42, "protected", col="blue")

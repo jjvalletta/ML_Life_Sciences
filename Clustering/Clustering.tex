@@ -59,7 +59,9 @@ morekeywords={}            % if you want to add more keywords to the set
 % Titlepage
 \title{Clustering}
 \subtitle{(unsupervised learning)}
-\author{JJ Valletta}
+\author{John Joseph Valletta}
+\date[1st-2nd June 2015]{1st-2nd June 2015}
+\institute[Penryn Campus]{University of Exeter, Penryn Campus, UK}
 % \logo{
 %   \makebox[0.95\paperwidth]{
 %     \includegraphics[width=4cm,keepaspectratio]{logo1.pdf}
@@ -73,7 +75,7 @@ morekeywords={}            % if you want to add more keywords to the set
 \begin{textblock*}{100mm}(.68\textwidth,+0.1cm)%.015 instead of 0.68 originally
 \includegraphics[width=4cm,keepaspectratio]{logo1.pdf}
 \end{textblock*}\fi}
-%\author{John Joseph Valletta, Alex Thornton and Mario Recker}
+
 %-------------------------------------------------------------------------------------------------%
 % Start of Document
 %-------------------------------------------------------------------------------------------------%
@@ -96,18 +98,40 @@ morekeywords={}            % if you want to add more keywords to the set
 \end{itemize}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
+\begin{frame}{What's the problem?}
+Well, it's driven by your data, e.g which of these genes are co-regulated?
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{microArray.jpg}
+\end{center}
+We want to find some underlying structure in the data $\rightarrow$ \textbf{Clustering}
+\end{frame}
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{What's the problem?}
+\begin{description}[Mathematical chemistry:]\addtolength{\itemsep}{0.5\baselineskip}
+	\item [Gene expression:] discovering co-regulated genes
+	\item [Biological systematics:] finding organisms sharing similar attributes
+	\item [Computer vision:] segmenting a digital image for object recognition
+	\item [Epidemiology:] identifying geographical clusters of diseases  
+	\item [Medical imaging:] differentiating between tissues
+	\item [Mathematical chemistry:] grouping compounds by topological indices
+\end{description}
+\vfill
+\textbf{Clustering is particularly useful in applications where labelling the data is very time consuming/expensive} 
+% Mention that it's also used in market research, social network analysis, search engines Clusty etc...
+\end{frame}
+%-------------------------------------------------------------------------------------------------%
 \begin{frame}{What is clustering?}
-\visible<2->{\begin{block}{Formal definition}
+\visible<1->{\begin{block}{Formal definition}
 Identifying homogeneous and well separated groups of data points (features) by some similarity
 measure
 \end{block}}
 \vfill
-\visible<3->{\begin{block}{Informal definition}
+\visible<2->{\begin{block}{Informal definition}
 The process of stereotyping your data \\
 e.g \textit{these} are round(ish) faces, \textit{these} are short(ish) people
 \end{block}}
 \vfill
-\visible<4->{\begin{block}{But how many groups?}
+\visible<3->{\begin{block}{But how many groups?}
 An unsolved problem. Issue lies in the subjectivity of the word \textbf{\textit{similar}} and its
 mathematical definition
 \end{block}}
@@ -126,30 +150,16 @@ mathematical definition
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{What are we after?}
-\begin{itemize}
-	\item High intra-cluster similarity
-	\item Low inter-cluster similarity
-	\item Elucidate on how the data is structured (maybe identify outliers)
-\end{itemize}
-\begin{center}
-	\includegraphics[width=0.8\textwidth]{samplePlot.pdf}
-\end{center}
-% Mention that it's a good example of limitation of statistics when analysing this data
-\end{frame}
-%-------------------------------------------------------------------------------------------------%
-\begin{frame}{Where is clustering used?}
-\begin{description}[Mathematical chemistry:]\addtolength{\itemsep}{0.5\baselineskip}
-	\item [Biological systematics:] finding organisms sharing similar attributes
-	\item [Computer vision:] segmenting a digital image for object recognition
-	\item [Epidemiology:] identifying geographical clusters of diseases
-	\item [Gene expression:] discovering co-regulated genes  
-	\item [Medical imaging:] differentiating between tissues
-	\item [Mathematical chemistry:] grouping compounds by topological indices
+\begin{description}[Motivation:]
+	\item[Motivation:]  How is the data structured? Any outliers? 
+	\item[Goals:]		\textit{High} intra-cluster similarity and \textit{low} inter-cluster similarity 
 \end{description}
-\vfill
-\textbf{Clustering is particularly useful in applications where labelling the data is very time consuming/expensive} 
-% Mention that it's also used in market research, social network analysis, search engines Clusty etc...
+\begin{center}
+	\includegraphics[width=0.9\textwidth]{samplePlot.png}
+\end{center}
+% Mention that it's a good example of limitation of statistics when analysing this data coz n<<p
 \end{frame}
+
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Major types of clustering methods}
 \small
@@ -174,75 +184,88 @@ mathematical definition
 \normalsize
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Similarity measures}
-\vspace{-1cm}
-\begin{columns}
-\column{0.68\textwidth}
-What is the distance $d(\mathbf{a,\ b})$ between $\mathbf{a}$ and $\mathbf{b}$?
-\column{0.32\textwidth}
+\begin{itemize}\addtolength{\itemsep}{0.5\baselineskip}
+	\item A \textit{distance} metric quantifies how \textit{close} two data points are
+	\item Several ways to define this distance which has a direct impact on the clustering result
+\end{itemize}
+\vfill
 \begin{center}
-	\includegraphics[width=\textwidth]{distance.pdf}
+	\visible<1->{\includegraphics[width=0.4\textwidth]{distance.pdf}}
+	\visible<2->{\includegraphics[width=0.59\textwidth]{corrDistance.pdf}}
 \end{center}
-\end{columns}
-\begin{columns}
-\column{0.44\textwidth}
-\visible<2->{\begin{block}{example: $\mathbf{a,\ b}\in \mathbb{R}^2$}
-\begin{itemize}\addtolength{\itemsep}{1\baselineskip}
-	\item<2-> \textbf{Manhattan} 
-	$\vert a_1 - b_1 \vert + \vert a_2 - b_2 \vert$
-	\item<3-> \textbf{Euclidean} 
-	$\sqrt{(a_1 - b_1)^2 + (a_2 - b_2)^2}$
-	\item<4-> \textbf{Minkowski (p-norm)} 
-	$\sqrt[p]{\vert a_1 - b_1 \vert^p + \vert a_2 - b_2 \vert^p}$
-\end{itemize}
-\end{block}}
-\column{0.55\textwidth}	
-\visible<2->{\begin{block}{in general: $\mathbf{a,\ b}\in \mathbb{R}^d$}
-\begin{itemize}\addtolength{\itemsep}{1.6\baselineskip}
-	\item[]<2->
-	$\sum_{i=1}^{d}\vert a_i - b_i \vert = \Vert \mathbf{a} - \mathbf{b} \Vert_1$
-	\item[]<3->
-	$\left(\sum_{i=1}^{d}(a_i - b_i)^2\right)^{\frac{1}{2}} = \Vert \mathbf{a} - \mathbf{b} \Vert_2$
-	\item[]<4->
-	$\left(\sum_{i=1}^{d}\vert a_i - b_i \vert^p\right)^{\frac{1}{p}} = \Vert \mathbf{a} - \mathbf{b} \Vert_p$
-\end{itemize}
-\end{block}}
-\end{columns}
 \end{frame}
-%-------------------------------------------------------------------------------------------------%
-\begin{frame}{Similarity measures}
-\vspace{-1cm}
-\begin{columns}
-\column{0.68\textwidth}
-What is the distance $d(\mathbf{a,\ b})$ between $\mathbf{a}$ and $\mathbf{b}$?
-\column{0.32\textwidth}
-\begin{center}
-	\includegraphics[width=\textwidth]{distance.pdf}
-\end{center}
-\end{columns}
-\begin{columns}
-\column{0.44\textwidth}
-\begin{block}{example: $\mathbf{a,\ b}\in \mathbb{R}^2$}
-\begin{itemize}\addtolength{\itemsep}{1.46\baselineskip}
-	\item<2-> \textbf{Canberra} 
-	$\frac{\vert a_1 - b_1 \vert}{\vert a_1 \vert + \vert b_1 \vert} + \frac{\vert a_2 - b_2 \vert}{\vert a_2 \vert + \vert b_2 \vert} $
-	\item<3-> \textbf{Cosine similarity} 
-	$\frac{a_1b_1 + a_2b_2}{\sqrt{a_1^2 + a_2^2}\sqrt{b_1^2 + b_2^2}}$
-	\item<4-> \textbf{Correlation distance}
-\end{itemize}
-\end{block}
-\column{0.55\textwidth}	
-\begin{block}{in general: $\mathbf{a,\ b}\in \mathbb{R}^d$}
-\begin{itemize}\addtolength{\itemsep}{1.85\baselineskip}
-	\item[]<2->
-	$\sum_{i=1}^{d}\frac{\vert a_i - b_i \vert}{\vert a_i \vert + \vert b_i \vert}$
-	\item[]<3->
-	$\frac{\sum_{i=1}^{d}a_ib_i}{\sqrt{\sum_{i=1}^{d}(a_i)^2}\sqrt{\sum_{i=1}^{d}(b_i)^2}} = \frac{\mathbf{a.b}}{\Vert a \Vert_2 \Vert b \Vert_2}$
-	\item[]<4->
-	Pearson ($\rho$), Spearman, Kendall ($\tau$)
-\end{itemize}
-\end{block}
-\end{columns}
-\end{frame}
+% Note: We can also take 1-abs(corr) to consider anti-correlations as being similar
+% %-------------------------------------------------------------------------------------------------%
+% \begin{frame}{Similarity measures}
+% \vspace{-1cm}
+% \begin{columns}
+% \column{0.68\textwidth}
+% What is the distance $d(\mathbf{a,\ b})$ between $\mathbf{a}$ and $\mathbf{b}$?
+% \column{0.32\textwidth}
+% \begin{center}
+% 	\includegraphics[width=\textwidth]{distance.pdf}
+% \end{center}
+% \end{columns}
+% \begin{columns}
+% \column{0.44\textwidth}
+% \visible<2->{\begin{block}{example: $\mathbf{a,\ b}\in \mathbb{R}^2$}
+% \begin{itemize}\addtolength{\itemsep}{1\baselineskip}
+% 	\item<2-> \textbf{Manhattan} 
+% 	$\vert a_1 - b_1 \vert + \vert a_2 - b_2 \vert$
+% 	\item<3-> \textbf{Euclidean} 
+% 	$\sqrt{(a_1 - b_1)^2 + (a_2 - b_2)^2}$
+% 	\item<4-> \textbf{Minkowski (p-norm)} 
+% 	$\sqrt[p]{\vert a_1 - b_1 \vert^p + \vert a_2 - b_2 \vert^p}$
+% \end{itemize}
+% \end{block}}
+% \column{0.55\textwidth}	
+% \visible<2->{\begin{block}{in general: $\mathbf{a,\ b}\in \mathbb{R}^d$}
+% \begin{itemize}\addtolength{\itemsep}{1.6\baselineskip}
+% 	\item[]<2->
+% 	$\sum_{i=1}^{d}\vert a_i - b_i \vert = \Vert \mathbf{a} - \mathbf{b} \Vert_1$
+% 	\item[]<3->
+% 	$\left(\sum_{i=1}^{d}(a_i - b_i)^2\right)^{\frac{1}{2}} = \Vert \mathbf{a} - \mathbf{b} \Vert_2$
+% 	\item[]<4->
+% 	$\left(\sum_{i=1}^{d}\vert a_i - b_i \vert^p\right)^{\frac{1}{p}} = \Vert \mathbf{a} - \mathbf{b} \Vert_p$
+% \end{itemize}
+% \end{block}}
+% \end{columns}
+% \end{frame}
+% %-------------------------------------------------------------------------------------------------%
+% \begin{frame}{Similarity measures}
+% \vspace{-1cm}
+% \begin{columns}
+% \column{0.68\textwidth}
+% What is the distance $d(\mathbf{a,\ b})$ between $\mathbf{a}$ and $\mathbf{b}$?
+% \column{0.32\textwidth}
+% \begin{center}
+% 	\includegraphics[width=\textwidth]{distance.pdf}
+% \end{center}
+% \end{columns}
+% \begin{columns}
+% \column{0.44\textwidth}
+% \begin{block}{example: $\mathbf{a,\ b}\in \mathbb{R}^2$}
+% \begin{itemize}\addtolength{\itemsep}{1.46\baselineskip}
+% 	\item<2-> \textbf{Canberra} 
+% 	$\frac{\vert a_1 - b_1 \vert}{\vert a_1 \vert + \vert b_1 \vert} + \frac{\vert a_2 - b_2 \vert}{\vert a_2 \vert + \vert b_2 \vert} $
+% 	\item<3-> \textbf{Cosine similarity} 
+% 	$\frac{a_1b_1 + a_2b_2}{\sqrt{a_1^2 + a_2^2}\sqrt{b_1^2 + b_2^2}}$
+% 	\item<4-> \textbf{Correlation distance}
+% \end{itemize}
+% \end{block}
+% \column{0.55\textwidth}	
+% \begin{block}{in general: $\mathbf{a,\ b}\in \mathbb{R}^d$}
+% \begin{itemize}\addtolength{\itemsep}{1.85\baselineskip}
+% 	\item[]<2->
+% 	$\sum_{i=1}^{d}\frac{\vert a_i - b_i \vert}{\vert a_i \vert + \vert b_i \vert}$
+% 	\item[]<3->
+% 	$\frac{\sum_{i=1}^{d}a_ib_i}{\sqrt{\sum_{i=1}^{d}(a_i)^2}\sqrt{\sum_{i=1}^{d}(b_i)^2}} = \frac{\mathbf{a.b}}{\Vert a \Vert_2 \Vert b \Vert_2}$
+% 	\item[]<4->
+% 	Pearson ($\rho$), Spearman, Kendall ($\tau$)
+% \end{itemize}
+% \end{block}
+% \end{columns}
+% \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}[fragile]
 \frametitle{$k$-means clustering}
@@ -264,14 +287,13 @@ fit <- kmeans(x, centers)
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{$k$-means clustering}
 	\begin{center}
-		\includegraphics<1>[width=\textwidth]{iteration1.pdf}
-		\includegraphics<2>[width=\textwidth]{iteration2.pdf}
-		\includegraphics<3>[width=\textwidth]{iteration3.pdf}
-		\includegraphics<4>[width=\textwidth]{iteration4.pdf}
-		\includegraphics<5>[width=\textwidth]{iteration5.pdf}
-		\includegraphics<6>[width=\textwidth]{iteration6.pdf}
-		\includegraphics<7>[width=\textwidth]{iteration7.pdf}
-		\includegraphics<8>[width=\textwidth]{iteration8.pdf}
+		\includegraphics<1>[width=0.68\textwidth]{iteration1.pdf}
+		\includegraphics<2>[width=0.68\textwidth]{iteration2.pdf}
+		\includegraphics<3>[width=0.68\textwidth]{iteration3.pdf}
+		\includegraphics<4>[width=0.68\textwidth]{iteration4.pdf}
+		\includegraphics<5>[width=0.68\textwidth]{iteration5.pdf}
+		\includegraphics<6>[width=0.68\textwidth]{iteration6.pdf}
+		\includegraphics<7>[width=0.68\textwidth]{iteration7.pdf}
 	\end{center}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
@@ -312,7 +334,7 @@ fit <- hclust(d, method)
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Hierarchical clustering: Link method}
-How do we calculate the inter-cluster distance? The \textit{linkage function}
+How do we compute the inter-cluster distance? The \textit{linkage function}
 \begin{columns}
 \column{0.6\textwidth}
 \begin{description}[Complete:]\addtolength{\itemsep}{0.8\baselineskip}
@@ -336,7 +358,7 @@ How do we calculate the inter-cluster distance? The \textit{linkage function}
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Hierarchical clustering in gene expression studies}
 \begin{center}
-	\includegraphics[width=0.68\textwidth]{geneExpression.pdf}
+	\includegraphics[width=0.67\textwidth]{geneExpression.pdf}
 \end{center}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
@@ -409,21 +431,22 @@ Because data is unlabelled the correct number of $k$ is ambiguous
 However we can plot some indices as a function of $k$ to help us evaluate cluster validity:
 \vfill
 \begin{itemize}\addtolength{\itemsep}{0.8\baselineskip}
-	\item Within cluster sum of square distances
+	\item Within and between clusters sum-of-squares distances
 	\item Akaike Information Criterion (AIC) or Bayesian Information Criterion (BIC) when using distribution-based methods
-	\item Silhouette plot $-1 \geq s(i) \leq 1$ where:\\
-	$s(i) = 1$, \textit{i}th datum is appropriately clustered (good)\\
-	$s(i) = 0$, \textit{i}th datum is borderline between two clusters (meh.)\\
-	$s(i) = -1$, \textit{i}th datum should be in neighbouring cluster (bad)
+	\item Silhouette plot %$-1 \geq s(i) \leq 1$ where:\\
+	% $s(i) = 1$, \textit{i}th datum is appropriately clustered (good)\\
+	% $s(i) = 0$, \textit{i}th datum is borderline between two clusters (meh.)\\
+	% $s(i) = -1$, \textit{i}th datum should be in neighbouring cluster (bad)
 \end{itemize}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{How do we determine the correct number of clusters?}
 \begin{center}
-	\includegraphics[width=0.5\textwidth]{silhK3.pdf}	
-	\includegraphics[width=0.5\textwidth]{silhK4.pdf}
+	\includegraphics[width=0.48\textwidth]{sumOfSquares.pdf}\hfill	
+	\includegraphics[width=0.48\textwidth]{infoCriterion.pdf}
 \end{center}
 \end{frame}
+% Silhoutte plot result
 % 0.71-1.0
 % A strong structure has been found
 
@@ -451,8 +474,13 @@ NbClust(data, distance, method, min.nc, max.nc, index)
 # max.nc - max number of clusters to consider
 # index - which indices to compute, "all" computes all of them
 \end{lstlisting}
-\vfill
-\textbf{Note}: These indices can \textit{only} give us a ballpark range for the correct number of clusters
+\vspace{-0.5cm}
+\textbf{Note}: 
+\begin{itemize}\addtolength{\itemsep}{0.3\baselineskip}
+	\item Indices \textit{only} give us a ballpark range for ``correct'' number of clusters
+	\item Are they biologically relevant? Prior knowledge to the rescue
+	\item E.g how many different phenotypes are you expecting?
+\end{itemize}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \end{document}
