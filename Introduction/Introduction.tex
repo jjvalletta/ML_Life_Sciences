@@ -21,7 +21,9 @@
 % Titlepage
 \title{Introduction to Machine Learning}
 \subtitle{for the Life Sciences}
-\author{JJ Valletta}
+\author{John Joseph Valletta}
+\date[1st-2nd June 2015]{1st-2nd June 2015}
+\institute[Penryn Campus]{University of Exeter, Penryn Campus, UK}
 % Logo
 \logo{\ifplacelogo\includegraphics[width=4cm,keepaspectratio, left]{logo2.pdf}\fi}
 \addtobeamertemplate{headline}{}{\ifplacelogo
@@ -58,22 +60,120 @@
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Bibliography}
 \begin{center}
-	\includegraphics[width=0.33\textwidth, height=0.65\textheight]{bookBishop.png}
-	\includegraphics[width=0.33\textwidth, height=0.65\textheight]{bookHastie.png}
 	\includegraphics[width=0.33\textwidth, height=0.65\textheight]{bookJames.png}
+	\includegraphics[width=0.33\textwidth, height=0.65\textheight]{bookHastie.png}
+	\includegraphics[width=0.33\textwidth, height=0.65\textheight]{bookBishop.png}
 \end{center}
 \end{frame}
 \placelogofalse % Turn logo off
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Overview}
 \begin{itemize}\addtolength{\itemsep}{0.5\baselineskip}
-	\item<2-> What is machine learning?
-	\item<3-> Types of learning methods
-	\item<4-> Statistics vs Machine Learning
-	\item<5-> Formulating a machine learning problem
+	\item<2-> Why are we here?
+	\item<3-> What is machine learning?
+	\item<4-> Types of machine learning methods
+	\item<5-> Statistics vs Machine Learning
 	\item<6-> Terminology
-	\item<7-> Applications in life sciences
+	\item<7-> A bird's-eye view of machine learning
 \end{itemize}
+\end{frame}
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{Why are we here?}
+The infamous \textbf{Big Data}!
+\begin{center}	
+	\includegraphics<1>[width=\textwidth]{urbanLandCover.png}
+	\includegraphics<2>[width=\textwidth]{microArray.jpg}
+\end{center}
+\end{frame}
+
+% Urban Land Cover
+
+% Class: Land cover class (nominal) 
+% BrdIndx: Border Index (shape variable) 
+% Area: Area in m2 (size variable) 
+% Round: Roundness (shape variable) 
+% Bright: Brightness (spectral variable) 
+% Compact: Compactness (shape variable) 
+% ShpIndx: Shape Index (shape variable) 
+% Mean_G: Green (spectral variable) 
+% Mean_R: Red (spectral variable) 
+% Mean_NIR: Near Infrared (spectral variable) 
+% SD_G: Standard deviation of Green (texture variable) 
+% SD_R: Standard deviation of Red (texture variable) 
+% SD_NIR: Standard deviation of Near Infrared (texture variable) 
+% LW: Length/Width (shape variable) 
+% GLCM1: Gray-Level Co-occurrence Matrix [i forget which type of GLCM metric this one is] (texture variable) 
+% Rect: Rectangularity (shape variable) 
+% GLCM2: Another Gray-Level Co-occurrence Matrix attribute (texture variable) 
+% Dens: Density (shape variable) 
+% Assym: Assymetry (shape variable) 
+% NDVI: Normalized Difference Vegetation Index (spectral variable) 
+% BordLngth: Border Length (shape variable) 
+% GLCM3: Another Gray-Level Co-occurrence Matrix attribute (texture variable) 
+
+% Microarray
+
+% Each spot contains many copies of the same DNA sequence
+% that uniquely represents a gene from an organism. Spots are arranged in an orderly fashion into Pen-groups. 
+% The organism is grown in two different conditions (a reference condition and a test condition). 
+% RNA is extracted from the two cells, and is labelled with different dyes (red and
+% green) during the synthesis of cDNA by reverse transcriptase
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{Water, water everywhere nor any drop to drink}
+\begin{center}	
+	\includegraphics<1>[width=0.95\textwidth]{bigDataCartoon.jpg}
+	\includegraphics<2>[width=0.95\textwidth]{pulpFiction.jpg}
+\end{center}
+\end{frame}
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{What's the problem?}
+\begin{exampleblock}{Predicting fish species richness \vskip-1mm{\tiny Olden \textit{et al}. Q Rev Biol 2008, 83(2):171-193}}
+\begin{description}
+	\item[Features:] Lake surface area, shoreline perimeter, air temperature, precipitation and elevation
+	% e.g mean = 5.3 --> average of 5.3 species for those particular conditions e.g area<=1.5km^2  
+	\item[Method:] Decision trees (supervised)
+\end{description}
+\begin{center}
+	\includegraphics[width=0.5\textwidth]{olden.pdf}
+\end{center}
+\end{exampleblock}
+\end{frame}
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{What's the problem?}
+\begin{exampleblock}{Detection of malarial parasites \vskip-1mm{\tiny Purwar \textit{et al}. Malar J 2011, 10:364}}
+\begin{description}
+	\item[Features:] Image intensity
+	\item[Method:] Modified k-means clustering (unsupervised)
+\end{description}
+\begin{center}
+	\includegraphics[width=0.54\textwidth]{purwar02.pdf}
+	\includegraphics[width=0.46\textwidth]{purwar01.pdf}
+\end{center}
+\end{exampleblock}
+\end{frame}
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{What's the problem?}
+\begin{exampleblock}{Creating carbon-density maps \vskip-1mm{\tiny Baccini \textit{et al}. Nature Clim. Change 2012, 2:182-185}}
+\begin{description}
+	\item[Features:] Light detection and ranging (LiDAR) (elevation data)
+	\item[Method:] Random forests (ensemble of decision trees) (supervised)
+\end{description}
+\begin{center}
+	\includegraphics[width=0.74\textwidth]{baccini.pdf}
+\end{center}
+\end{exampleblock}
+\end{frame}
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{What's the problem?}
+\begin{exampleblock}{Acoustic classification of multiple simultaneous bird species \vskip-1mm{\tiny Briggs \textit{et al}. J Acoust Soc Am 2012, 131(6):4640-4650}}
+\begin{description}
+	\item[Features:] Segments in spectrogram (time vs frequency) from 10 secs audio recordings (corresponding to syllables of bird call)
+	\item[Method:] Multi-instance multi-label learning (supervised)
+\end{description}
+\begin{center}
+	\includegraphics[width=0.8\textwidth]{briggs.pdf}
+\end{center}
+\end{exampleblock}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{What my mum thinks machine learning is}
@@ -173,42 +273,69 @@ rather than following strictly static program instructions.}
 \end{center}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
-\begin{frame}{Types of learning methods}
-\small
-\begin{description}[Reinforcement learning:]
-	\item<2->[Unsupervised learning:] Inputs have \textit{no} corresponding output labels
-		\begin{itemize}
-			\item \textbf{Clustering} - discovering groups having similar attributes (e.g unlabelled gene expression profiles)
-			\item \textbf{Density Estimation} - determine probability distribution of data (e.g species distribution model)
-			\item \textbf{Dimensionality Reduction} - identify and remove redundant dimensions 
-		\end{itemize}
-	\item<3->[Supervised learning:] Inputs have corresponding output labels
-		\begin{itemize}
-			\item \textbf{Regression} - output is a continuous variable (e.g $CO_2\ concentration\ ppm$ )
-			\item \textbf{Classification} - output is categorical (e.g benign (0) or cancerous (1) tumour)
-		\end{itemize}	
-	\item<4->[Reinforcement learning:] Finding suitable actions to maximise a reward by a
-	process of trial and error. Tradeoff between exploration (use new actions) vs exploitation
-	(use actions already known to work) 
-\end{description}
+\begin{frame}{Types of machine learning methods: Unsupervised learning}
+\vspace{0.5cm}
+Inputs have \textit{no} corresponding output labels
+\vspace{-0.5cm}
+\begin{columns}
+\column{0.65\textwidth}
+\begin{itemize}\addtolength{\itemsep}{2\baselineskip}
+	\item<2-> \underline{\textbf{Clustering}} - discovering groups having similar attributes% (e.g unlabelled gene expression profiles)
+	\item<4-> \textbf{Density Estimation} - determine the distribution of data% (e.g species distribution model)
+	\item<6-> \textbf{Dimensionality Reduction} - identify and remove redundant dimensions  
+\end{itemize}
+\column{0.35\textwidth}	
+\begin{center}
+	\visible<2->{\framezoom<2><3>(0.65\textwidth,0.85cm)(0.35\textwidth, 1cm) % (⟨upper left x⟩,⟨upper left y⟩) (⟨zoom area width⟩,⟨zoom area depth⟩)
+				\includegraphics[width=0.75\textwidth,keepaspectratio]{clustering.pdf}}
+	\vfill
+	\visible<4->{\framezoom<4><5>(0.65\textwidth, 3.594cm)(0.2\textwidth, 2.8cm)
+				 \includegraphics[width=0.75\textwidth,keepaspectratio]{densityEstimation.pdf}}
+	\vfill
+	\visible<6->{\framezoom<6><7>(0.65\textwidth, 5.58cm)(0.35\textwidth, 1cm)
+				 \includegraphics[width=0.75\textwidth,keepaspectratio]{PCA.pdf}}
+\end{center}
+\end{columns}
 \end{frame}
-\normalsize
+
 %-------------------------------------------------------------------------------------------------%
-\begin{frame}{Statistics vs Machine Learning}
+\begin{frame}{Types of machine learning methods: Supervised learning}
+\vspace{0.5cm}
+Inputs have corresponding output labels
+\vspace{-0.5cm}
+\begin{columns}
+\column{0.58\textwidth}
+\begin{itemize}\addtolength{\itemsep}{6\baselineskip}
+	\item<2-> \textbf{\underline{Classification}} - output is categorical
+	\item<3-> \textbf{Regression} - output is continuous
+\end{itemize}
+\column{0.42\textwidth}	
+\begin{center}
+	\visible<2->{\includegraphics[width=1\textwidth]{classification.pdf}}
+	\vfill
+	\visible<3->{\includegraphics[width=1\textwidth]{regression.pdf}}
+\end{center}
+\end{columns}
+\end{frame}
+% \item<4->[Reinforcement learning:] Finding suitable actions to maximise a reward by a
+	% process of trial and error. Tradeoff between exploration (use new actions) vs exploitation
+	% (use actions already known to work) 
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{Statistics vs Machine Learning (not mutually exclusive)}
 \begin{center}
 	\includegraphics[width=\textwidth]{breimanPaper.pdf}\\
 	\includegraphics[width=0.85\textwidth]{statsvsML.png}
 \end{center}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
-\begin{frame}{Statistics vs Machine Learning}
+\begin{frame}{Statistics vs Machine Learning (not mutually exclusive)}
 \footnotesize %\small, \footnotesize, \scriptsize, \tiny
 \begin{columns}
 \column{0.49\textwidth}
 \begin{block}{Statistics}
 	\begin{itemize}\addtolength{\itemsep}{0.6\baselineskip}
 		\item<2-> \textbf{Philosophy} - provide humans a set of data analysis tools 
-		\item<3-> \textbf{Focus} - a probabilistic data model and its interpretability
+		\item<3-> \textbf{Focus} - what is the relationship between the data and the outcome? %a probabilistic data model and its interpretability
 		\item<4-> \textbf{Inference} - how was the observed data generated
 		\item<5-> \textbf{Learning} - All measured data then perform inference on the population
 		\item<6-> \textbf{Validation} - Measures of fit ($R^2$, chi-square test)
@@ -219,7 +346,7 @@ rather than following strictly static program instructions.}
 \begin{block}{Machine Learning}
 	\begin{itemize}\addtolength{\itemsep}{0.6\baselineskip}
 		\item<2-> \textbf{Philosophy} - replace humans in the processing of data  
-		\item<3-> \textbf{Focus} - algorithm that achieves excellent prediction accuracy
+		\item<3-> \textbf{Focus} - how can we predict the outcome using the data? % algorithm that achieves excellent prediction accuracy
 		\item<4-> \textbf{Prediction} - how can we use observed data to predict the future
 		\item<5-> \textbf{Learning} - Training dataset then perform predictions on testing dataset
 		\item<6-> \textbf{Validation} - How well it predicts ``unseen'' data (generalisation)
@@ -230,30 +357,18 @@ rather than following strictly static program instructions.}
 \end{frame}
 \normalsize
 %-------------------------------------------------------------------------------------------------%
-\begin{frame}{Statistics vs Machine Learning}
+\begin{frame}{Statistics and machine learning complement each other}
+% \begin{exampleblock}{}
+% {\small This enterprise (statistics) has at its heart the belief that a statistician, by imagination and by looking at the data, can invent a reasonably good parametric class of models for a complex mechanism devised by nature. Then parameters are estimated and conclusions are drawn. The conclusions are about the model's mechanism, and not about nature's mechanism!}
+% \vskip5mm
+% \hspace*\fill{\footnotesize --- Leo Breiman}
+% \end{exampleblock}
+% \vfill
 \begin{exampleblock}{}
-{\small This enterprise (statistics) has at its heart the belief that a statistician, by imagination and by looking at the data, can invent a reasonably good parametric class of models for a complex mechanism devised by nature. Then parameters are estimated and conclusions are drawn. The conclusions are about the model's mechanism, and not about nature's mechanism!}
+{\small The best solution could be an algorithmic model (machine learning), or maybe a data model, or maybe a combination. But the trick to being a \textbf{scientist} is to be open to using a wide variety of tools.}
 \vskip5mm
 \hspace*\fill{\footnotesize --- Leo Breiman}
 \end{exampleblock}
-\vfill
-\begin{exampleblock}{}
-{\small The best solution could be an algorithmic model (machine learning), or maybe a data model, or maybe a combination. But the trick to being a scientist is to be open to using a wide variety of tools.}
-\vskip5mm
-\hspace*\fill{\footnotesize --- Leo Breiman}
-\end{exampleblock}
-\end{frame}
-%-------------------------------------------------------------------------------------------------%
-\begin{frame}{Formulating a machine learning problem}
-\begin{enumerate}\addtolength{\itemsep}{0.5\baselineskip}
-	\item<2-> Question/Hypothesis (start generic then narrow it down)
-	\item<3-> Gather useful data
-	\item<4-> \textbf{Extract features} (\textit{most important step})
-	\item<5-> Choose a machine learning algorithm (\textit{probably least critical step})
-	\item<6-> Build a predictive model
-	\item<7-> Validate model
-	\item<8-> Select model having the best generalisation capabilities
-\end{enumerate}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Terminology}
@@ -270,55 +385,20 @@ rather than following strictly static program instructions.}
 \end{description}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
-\begin{frame}{Applications in life sciences}
-\begin{exampleblock}{Predicting fish species richness \vskip-1mm{\tiny Olden \textit{et al}. Q Rev Biol 2008, 83(2):171-193}}
-\begin{description}
-	\item[Features:] Lake surface area, shoreline perimeter, air temperature, precipitation and elevation
-	% e.g mean = 5.3 --> average of 5.3 species for those particular conditions e.g area<=1.5km^2  
-	\item[Method:] Decision trees (supervised)
-\end{description}
+\begin{frame}{A bird's-eye view of machine learning}
 \begin{center}
-	\includegraphics[width=0.5\textwidth]{olden.pdf}
+	\includegraphics[width=0.65\textwidth]{flowChart.png}
 \end{center}
-\end{exampleblock}
 \end{frame}
-%-------------------------------------------------------------------------------------------------%
-\begin{frame}{Applications in life sciences}
-\begin{exampleblock}{Detection of malarial parasites \vskip-1mm{\tiny Purwar \textit{et al}. Malar J 2011, 10:364}}
-\begin{description}
-	\item[Features:] Image intensity
-	\item[Method:] Modified k-means clustering (unsupervised)
-\end{description}
-\begin{center}
-	\includegraphics[width=0.54\textwidth]{purwar02.pdf}
-	\includegraphics[width=0.46\textwidth]{purwar01.pdf}
-\end{center}
-\end{exampleblock}
-\end{frame}
-%-------------------------------------------------------------------------------------------------%
-\begin{frame}{Applications in life sciences}
-\begin{exampleblock}{Creating carbon-density maps \vskip-1mm{\tiny Baccini \textit{et al}. Nature Clim. Change 2012, 2:182-185}}
-\begin{description}
-	\item[Features:] Light detection and ranging (LiDAR) (elevation data)
-	\item[Method:] Random forests (ensemble of decision trees) (supervised)
-\end{description}
-\begin{center}
-	\includegraphics[width=0.74\textwidth]{baccini.pdf}
-\end{center}
-\end{exampleblock}
-\end{frame}
-%-------------------------------------------------------------------------------------------------%
-\begin{frame}{Applications in life sciences}
-\begin{exampleblock}{Acoustic classification of multiple simultaneous bird species \vskip-1mm{\tiny Briggs \textit{et al}. J Acoust Soc Am 2012, 131(6):4640-4650}}
-\begin{description}
-	\item[Features:] Segments in spectrogram (time vs frequency) from 10 secs audio recordings (corresponding to syllables of bird call)
-	\item[Method:] Multi-instance multi-label learning (supervised)
-\end{description}
-\begin{center}
-	\includegraphics[width=0.8\textwidth]{briggs.pdf}
-\end{center}
-\end{exampleblock}
-\end{frame}
+% \begin{enumerate}\addtolength{\itemsep}{0.5\baselineskip}
+% 	\item<2-> Question/Hypothesis (start generic then narrow it down)
+% 	\item<3-> Gather useful data
+% 	\item<4-> \textbf{Extract features} (\textit{most important step})
+% 	\item<5-> Choose a machine learning algorithm (\textit{probably least critical step})
+% 	\item<6-> Build a predictive model
+% 	\item<7-> Validate model
+% 	\item<8-> Select model having the best generalisation capabilities
+% \end{enumerate}
 %-------------------------------------------------------------------------------------------------%
 \end{document}
 %-------------------------------------------------------------------------------------------------%

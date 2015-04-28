@@ -19,7 +19,7 @@ rm(list = setdiff(ls(), lsf.str()))
 library(MASS) # mvrnorm (multivariate normal)
 library(rgl) # plot3d
 N <- 100 # number of data points
-sigma2 <- 10 # variance of data points
+sigma2 <- 1 # variance of data points
 covMatrix <- sigma2*diag(3) # assume the same variance in all three directions
 groupA <- mvrnorm(n=N, mu=c(3, 3, 9), Sigma=covMatrix)
 groupB <- mvrnorm(n=N, mu=c(3, 9, 3), Sigma=covMatrix)
@@ -40,11 +40,13 @@ for (k in kRange){
 }
 minY <- min(c(intraClustSS, interClustSS))
 maxY <- max(c(intraClustSS, interClustSS))
-plot(kRange, interClustSS, type="o", pch=1, col="blue", lwd=3, lty=1, ylim=c(minY, maxY), xlab="k")
+pdf("sumOfSquares.pdf", paper="a4r")
+plot(kRange, interClustSS, type="o", pch=1, col="blue", lwd=3, lty=1, 
+     ylim=c(minY, maxY), xlab="no. of clusters (k)", ylab="sum-of-squares")
 points(kRange, intraClustSS, type="o", pch=1, col="red", lwd=3)
-legend("topleft", c("inter-cluster sum-of-squares", "intra-cluster sum-of-squares"), bty="n",
+legend("right", c("inter-cluster (between)", "intra-cluster (within)"), bty="n",
        col=c("blue", "red"), pch=1, lwd=3, lty=1)
-
+dev.off()
 # Inter- and intra-cluster SS doesn't change after k=5
 fit <- kmeans(x=xTrain, centers=5)
 plot3d(xTrain, col=fit$cluster, xlab="x", ylab="y", zlab="z")
@@ -53,10 +55,22 @@ plot3d(xTrain, col=fit$cluster, xlab="x", ylab="y", zlab="z")
 #-----------------------------------------------------------------------------#
 # gaussian mixture models
 library(mclust) # gaussian mixture models
-fit <- Mclust(data=xTrain, G=seq(10), modelNames="EII")
-plot(fit$BIC, type="o", pch=1, col="blue", lwd=3, lty=1, xlab="k")
-legend("topleft", "BIC (Bayesian Information Criterion)", bty="n",
-       col=c("blue", "red"), pch=1, lwd=3, lty=1)
+AIC <- rep(NA, length(kRange))  
+BIC <- rep(NA, length(kRange))
+for (k in kRange) {
+    fit <- Mclust(data=xTrain, G=k, modelNames="EII")    
+    BIC[k-1] <- fit$bic
+    AIC[k-1] <- 2*fit$df - 2*fit$loglik # Have to compute this not implicitly returned by mclust
+}
+pdf("infoCriterion.pdf", paper="a4r")
+plot(kRange, -AIC, type="o", pch=1, col="blue", lwd=3, lty=1, 
+     xlab="no. of clusters (k)", ylab="information criterion") # Plot -ve AIC so to keep same scale as BIC
+lines(kRange, BIC, type="o", pch=1, col="red", lwd=3)
+legend("topleft", c("Akaike", "Bayesian"), bty="n",
+       col=c("blue", "red"), pch=1, lwd=3, lty=1) 
+dev.off()
+# Could have done this instead of looping...
+fit <- Mclust(data=xTrain, G=seq(10), modelNames="EII") 
 summary(fit)
 plot(fit, what="density", lwd=2)
 
@@ -126,7 +140,7 @@ coordinates(df) <- coordinates(envData) # set spatial coordinates (same as envDa
 gridded(df) <- TRUE # coerce to SpatialPixelsDataFrame
 rasterDF <- raster(df) # coerce to raster
 library(RColorBrewer) # package for pretty colour palettes
-plot(rasterDF, col=brewer.pal(n=9, name="Reds"))
+plot(rasterDF, col=brewer.pal(n=9, name="Reds"), xlab="longtitude", ylab="latitude")
 points(data[, 2], data[, 3], pch=20, col="blue", cex=0.5) # plot a point for every observation
 
 #-----------------------------------------------------------------------------#
