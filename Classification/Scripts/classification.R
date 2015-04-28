@@ -135,9 +135,11 @@ dev.off()
 
 fit <- randomForest(Species ~., data=iris, ntree=100, importance=TRUE)
 pdf(file="varImportance.pdf", paper="a4r")
+par(pty="s")
 varImpPlot(fit, main="")
 dev.off()
 fit$confusion
+par(pty="m")
 
 #-----------------------------------------------------------------------------#
 # Support Vector Machines (SVMs)
