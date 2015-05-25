@@ -193,3 +193,83 @@ fancyRpartPlot(fit) # Coloured tree
 predClass = predict(fit, type="class") # Pred class on training dataset
 confusionMatrix <- table(yTrain, predClass)
 classError <- 1 - diag(prop.table(confusionMatrix, 1)) # Compute misclassification rates
+
+#-----------------------------------------------------------------------------#
+# 7) Identifying patients with Parkinsons's disease using speech recordings
+#-----------------------------------------------------------------------------#
+library(RCurl) # To compose general HTTP requests 
+dataPath <- getURL("https://archive.ics.uci.edu/ml/machine-learning-databases/parkinsons/parkinsons.data")
+data <- read.table(text=dataPath, header=T, sep=",", skip=0, row.names=1) # Read using a text connection
+data$status <- factor(data$status) # Convert to factor 0/1 absence/presence of Parkinson's
+iiPredictors <- which(names(data)!="status") # Column number of all predictors i.e everything apart from "status"
+# Scale all features to -1 to +1 (all data columns except "status")
+# x' = 2*(x - xmin)/(xmax - xmin) - 1
+xMin <- apply(data[, iiPredictors], 2, min)
+xMax <- apply(data[, iiPredictors], 2, max)
+data[, iiPredictors] <- sweep(data[, iiPredictors], 2, xMin, FUN="-")
+data[, iiPredictors] <- 2*data[, iiPredictors]
+data[, iiPredictors] <- sweep(data[, iiPredictors], 2, (xMax-xMin), FUN="/")
+data[, iiPredictors] <- data[, iiPredictors] - 1
+# Split into training/testing 60% - 40%
+set.seed(101) # Just so we can reproduce results
+trainIndices <- sample(x=dim(data)[1], size=round(dim(data)[1]*0.6), replace=FALSE)
+# Train SVM
+library(e1071) # An SVM library
+fit <- svm(status ~., data=data, subset=trainIndices, type="C-classification", kernel="linear", probability=TRUE)
+# Compute misclassification rates on testing dataset
+predClass <- predict(fit, newdata=data[-trainIndices, ], type="class")
+confusionMatrix <- table(data$status[-trainIndices], predClass)
+classError <- 1 - diag(prop.table(confusionMatrix, 1))
+# Plot Receiver operating characteristic (ROC)
+library(ROCR) # ROC curves library
+predProb <- predict(fit, newdata=data[-trainIndices, ], probability=TRUE) # Compute prediction probabilities rather than just class
+# Lower level - Negative class (0), Upper level - Positive class (1)
+predObj <- prediction(attr(predProb, "probabilities")[, 1], data$status[-trainIndices]) # prediction(probability of class=positive class, actual class label or factor)
+ROCObj <- performance(predObj, "tpr", "fpr")
+plot(ROCObj)
+abline(a=0, b=1, col="red", lty=2, lwd=3) # Randomly guessing line
+# Compute area under curve (AUC)
+# AUC = 0.5 (randomly guessing class), AUC = 1 (perfect predictor)
+areaUnderCurve <- performance(predObj, "auc") # Compute AUC
+areaUnderCurve <- unlist(slot(areaUnderCurve, "y.values")) # Extract AUC (converting S4 class to vector)
+
+library("corrgram")
+corrgram(data[, iiPredictors], lower.panel=panel.shade, upper.panel=panel.conf)
+
+#------------------------------------------------------------------------------#
+# Plot to show true positive, false positive etc...
+library(scales) # alpha
+xTest <- seq(from=-12, to=12, by=0.01)
+yA <- dnorm(xTest, mean=-2, sd=2)
+yB <- dnorm(xTest, mean=+2, sd=4)
+yMin <- 0
+yMax <- 0.22
+lwd <- 5
+kSize <- 1.5 # factor to increase size of labels etc...
+fontSize <- 2 # 2 is bold + italic
+#------------------------------------------------------------------------------#
+# The plot
+pdf("DefinitionsPlot.pdf", paper="a4r", width=11.69, height=8.27)
+plot(xTest, yA, col="skyblue", type="l", lwd=lwd, 
+     xlab="predictor", ylab="frequency",
+     cex.lab=kSize, cex.axis=kSize, cex.main=kSize, cex.sub=kSize, ylim=c(yMin, yMax))
+lines(xTest, yB, col="tomato2", lwd=lwd)
+text(x=-2, y=0.21, "no disease", col="skyblue", font=4, cex=kSize) # Bold + italic
+text(x=+2, y=0.11, "disease", col="tomato2", font=4, cex=kSize) # Bold + italic
+#legend("topleft", c("not protected", "protected"), col=c("tomato2", "skyblue"), lty=1, cex=kSize, lwd=lwd, bty="n")
+segments(x0=-2.5, y0=0, x1=-2.5, y1=0.2, col="black", lwd=lwd, lty=2) # threshold line
+# True Negative
+polygon(c(xTest[xTest < -2.5], rev(xTest[xTest < -2.5])), c(yA[xTest < -2.5], rev(yB[xTest < -2.5])), col=alpha("skyblue", 0.2))
+text(x=-4, y=0.06, "True \n Negative", col="skyblue", font=fontSize, cex=kSize)
+# False Negative
+polygon(c(xTest[xTest < -2.5], rev(xTest[xTest < -2.5])), c(yB[xTest < -2.5], 0*rev(yB[xTest < -2.5])), col=alpha("grey", 0.2))
+text(x=-4, y=0.014, "False \n Negative", col="grey50", cex=kSize, font=fontSize)
+# False Positive
+polygon(c(xTest[xTest > -2.5], rev(xTest[xTest > -2.5])), c(yA[xTest > -2.5], 0*rev(yB[xTest > -2.5])), col=alpha("black", 0.2))
+text(x=-0.5, y=0.06, "False \n Positive", col="black", cex=kSize, font=fontSize)
+# True Positive
+polygon(c(xTest[xTest > 0.5], rev(xTest[xTest > 0.5])), c(yB[xTest > 0.5], rev(yA[xTest > 0.5])), col=alpha("tomato2", 0.2))
+text(x=3.5, y=0.06, "True \n Positive", col="tomato2", font=fontSize, cex=kSize)
+# Classification cut-off
+#text(x=-2.5, y=0.14, "threshold", col="black")
+dev.off()
