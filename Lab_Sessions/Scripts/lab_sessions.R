@@ -147,7 +147,7 @@ points(data[, 2], data[, 3], pch=20, col="blue", cex=0.5) # plot a point for eve
 # 5) Predicting forest cover type from cartographic attributes
 #-----------------------------------------------------------------------------#
 library(RCurl) # To compose general HTTP requests 
-dataPath <- getURL("https://raw.githubusercontent.com/jjvalletta/ML_Life_Sciences/master/Lab_Sessions/Data/ForestCoverData.csv")
+dataPath <- getURL("https://dl.dropboxusercontent.com/u/57002389/ML_Life_Sciences/Data/ForestCoverData.csv")
 data <- read.table(text=dataPath, header=T, sep=",", skip=0) # Read using a text connection
 data <- data[complete.cases(data), ] # Only 2 cases of missing data so ignore
 data$Cover_Type <- factor(data$Cover_Type)
@@ -168,7 +168,10 @@ library(randomForest)
 fit <- randomForest(Cover_Type ~ ., data=data, subset=trainIndices, ntree=200, importance=TRUE) # Takes a few secs
 fit$confusion # Confusion matrix
 varImpPlot(fit) # Variable importance plot
-
+# Testing set
+predClass <- predict(fit, newdata=data[-trainIndices, ])
+confusionMatrix <- table(data$Cover_Type[-trainIndices], predClass)
+classError <- 1 - diag(prop.table(confusionMatrix, 1)) # Compute misclassification rates
 #-----------------------------------------------------------------------------#
 # 6) Classifying gene expression data
 #-----------------------------------------------------------------------------#
