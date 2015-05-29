@@ -46,12 +46,15 @@ for (i in c(1, 3, 12)) {
     fit <- lm(y ~ poly(x, i), data=df)   
     mainTitle <- paste(i, "degree polynomial", comment[k]); k<-k+1;
     pdf(file=paste("polyFit", i, ".pdf", sep=""), paper="a4r")
-    plot(xSeq, sin(xSeq), col="grey", type="l", lwd=4, main=mainTitle, 
-         xlab="x", ylab="y", xlim=c(-3.2, 3.2), ylim=c(-1.3, 1.3))
-    points(y ~ x, data=df, pch=16, col="black", cex=1.5)
-    lines(xSeq, predict(fit, newdata=xTest), col="blue", lwd=4)
+    lwd <- 8
+    kSize <- 1.7
+    plot(xSeq, sin(xSeq), col="grey", type="l", lwd=lwd, main=mainTitle, 
+         xlab="x", ylab="y", xlim=c(-3.2, 3.2), ylim=c(-1.7, 1.7), 
+         cex.lab=kSize, cex.axis=kSize, cex.main=kSize, cex.sub=kSize, cex=kSize)
+    points(y ~ x, data=df, pch=16, col="black", cex=kSize)
+    lines(xSeq, predict(fit, newdata=xTest), col="blue", lwd=lwd, cex=kSize)
     legend("topleft", c("underlying function (true)", "observed data points", "model fit"), bty="n",
-           col=c("grey", "black", "blue"), pch=c(NA, 16, NA), lwd=4, lty=c(1, NA, 1))
+           col=c("grey", "black", "blue"), pch=c(NA, 16, NA), lwd=lwd, lty=c(1, NA, 1), cex=kSize)
     dev.off()
 }
 
@@ -253,4 +256,42 @@ image(xSeq, ySeq, classAssign, xlab="petal width (cm)",
 points(iris$Petal.Width, iris$Sepal.Length, pch=speciesSym[iris$Species], lwd=2, bg=speciesCol[iris$Species], col="black")
 legend("topleft", c("setosa", "versicolor", "virginica"), bty="n",
        col="black", pch=speciesSym, pt.bg=speciesCol)
+dev.off()
+
+#------------------------------------------------------------------------------#
+# Plot to show true positive, false positive etc...
+library(scales) # alpha
+xTest <- seq(from=-12, to=12, by=0.01)
+yA <- dnorm(xTest, mean=-2, sd=2)
+yB <- dnorm(xTest, mean=+2, sd=4)
+yMin <- 0
+yMax <- 0.22
+lwd <- 5
+kSize <- 1.5 # factor to increase size of labels etc...
+fontSize <- 2 # 2 is bold + italic
+#------------------------------------------------------------------------------#
+# The plot
+pdf("DefinitionsPlot.pdf", paper="a4r", width=11.69, height=8.27)
+plot(xTest, yA, col="skyblue", type="l", lwd=lwd, 
+     xlab="predictor", ylab="frequency",
+     cex.lab=kSize, cex.axis=kSize, cex.main=kSize, cex.sub=kSize, ylim=c(yMin, yMax))
+lines(xTest, yB, col="tomato2", lwd=lwd)
+text(x=-2, y=0.21, "no disease", col="skyblue", font=4, cex=kSize) # Bold + italic
+text(x=+2, y=0.11, "disease", col="tomato2", font=4, cex=kSize) # Bold + italic
+#legend("topleft", c("not protected", "protected"), col=c("tomato2", "skyblue"), lty=1, cex=kSize, lwd=lwd, bty="n")
+segments(x0=-2.5, y0=0, x1=-2.5, y1=0.2, col="black", lwd=lwd, lty=2) # threshold line
+# True Negative
+polygon(c(xTest[xTest < -2.5], rev(xTest[xTest < -2.5])), c(yA[xTest < -2.5], rev(yB[xTest < -2.5])), col=alpha("skyblue", 0.2))
+text(x=-4, y=0.06, "True \n Negative", col="skyblue", font=fontSize, cex=kSize)
+# False Negative
+polygon(c(xTest[xTest < -2.5], rev(xTest[xTest < -2.5])), c(yB[xTest < -2.5], 0*rev(yB[xTest < -2.5])), col=alpha("grey", 0.2))
+text(x=-4, y=0.014, "False \n Negative", col="grey50", cex=kSize, font=fontSize)
+# False Positive
+polygon(c(xTest[xTest > -2.5], rev(xTest[xTest > -2.5])), c(yA[xTest > -2.5], 0*rev(yB[xTest > -2.5])), col=alpha("black", 0.2))
+text(x=-0.5, y=0.06, "False \n Positive", col="black", cex=kSize, font=fontSize)
+# True Positive
+polygon(c(xTest[xTest > 0.5], rev(xTest[xTest > 0.5])), c(yB[xTest > 0.5], rev(yA[xTest > 0.5])), col=alpha("tomato2", 0.2))
+text(x=3.5, y=0.06, "True \n Positive", col="tomato2", font=fontSize, cex=kSize)
+# Classification cut-off
+#text(x=-2.5, y=0.14, "threshold", col="black")
 dev.off()

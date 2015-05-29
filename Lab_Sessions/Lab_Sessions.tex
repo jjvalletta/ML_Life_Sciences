@@ -479,7 +479,7 @@ library(rpart.plot)
 library(rattle) # For fancyRpartPlot to plot rpart tree nicely
 fit <- rpart(Cover_Type ~ ., data=data, subset=trainIndices, method="class")
 fancyRpartPlot(fit) # Plot decision tree
-predClass = predict(fit, type="class") # Pred class on training dataset
+predClass <- predict(fit, type="class") # Pred class on training dataset
 confusionMatrix <- table(data$Cover_Type[trainIndices], predClass)
 classError <- 1 - diag(prop.table(confusionMatrix, 1)) # Compute misclassification rates
 \end{lstlisting}

@@ -62,7 +62,7 @@ morekeywords={}            % if you want to add more keywords to the set
 \subtitle{(supervised learning)}
 \author{John Joseph Valletta}
 \date[1st-2nd June 2015]{1st-2nd June 2015}
-\institute[Penryn Campus]{University of Exeter, Penryn Campus, UK}
+\institute[]{University of Exeter, Penryn Campus, UK}
 % \logo{
 %   \makebox[0.95\paperwidth]{
 %     \includegraphics[width=4cm,keepaspectratio]{logo1.pdf}
@@ -432,6 +432,17 @@ fit <- svm(formula, data, type, kernel)
 	\includegraphics[width=0.333\textwidth]{polyFit1.pdf}
 	\includegraphics[width=0.333\textwidth]{polyFit3.pdf}
 	\includegraphics[width=0.333\textwidth]{polyFit12.pdf}
+\end{center}
+\end{frame}
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{Over/under-fitting (bias-–variance tradeoff)}
+\begin{itemize}\addtolength{\itemsep}{0.5\baselineskip}
+\item To strike a balance between sensitivity and specificity not just for the training dataset but also for the testing dataset
+\item The objective is to build a classifier that \textit{generalises} well
+\item Confusion matrices and other performance metrics are intrinsic goodness-of-fits (like $R^2$)
+\end{itemize}
+\begin{center}
+	\includegraphics[width=0.65\textwidth]{definitionsPlot.pdf}
 \end{center}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%

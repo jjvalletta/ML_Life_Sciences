@@ -26,7 +26,7 @@
 \subtitle{or avoiding machine learning going mad}
 \author{John Joseph Valletta}
 \date[1st-2nd June 2015]{1st-2nd June 2015}
-\institute[Penryn Campus]{University of Exeter, Penryn Campus, UK}
+\institute[]{University of Exeter, Penryn Campus, UK}
 % \logo{
 %   \makebox[0.95\paperwidth]{
 %     \includegraphics[width=4cm,keepaspectratio]{logo1.pdf}
@@ -53,12 +53,50 @@
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Overview}
 \begin{itemize}\addtolength{\itemsep}{0.5\baselineskip}
+	\item<1-> Validating models
 	\item<2-> Machine learning gone mad
 	\item<3-> Laws of data analysis
  	\item<4-> A few important tips
 	\item<5-> Which machine learning algorithm should I use?
-	\item<6-> Validating models
 \end{itemize}
+\end{frame}
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{Selecting and validating models}
+Recall the bias-–variance tradeoff:
+\vfill
+\begin{center}
+	\includegraphics[width=0.333\textwidth]{polyFit1.pdf}
+	\includegraphics[width=0.333\textwidth]{polyFit3.pdf}
+	\includegraphics[width=0.333\textwidth]{polyFit12.pdf}
+\end{center}
+\vfill
+\textbf{How do we choose model complexity (model selection)?}\\
+\textbf{Once we choose it, how do we validate/assess it?}
+\end{frame}
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{Selecting and validating models}
+\begin{itemize}
+	\item<1-> Split data into three parts:
+	\begin{center}
+		\includegraphics<1->[width=0.5\textwidth]{datasets.png}
+		\\
+		\visible<2->{\includegraphics[width=0.5\textwidth]{trainvsval.pdf}}
+	\end{center}
+\end{itemize}
+\end{frame}
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{Selecting and validating models}
+\begin{itemize}
+	\item<1-> When data is limited use $k$-fold cross-validation to estimate test error
+	\vfill
+	\begin{center}
+		\includegraphics<1->[width=0.4\textwidth]{crossvalidation.png}
+	\end{center}
+\end{itemize}
+\visible<2->{\begin{framed}
+\vfill
+\textbf{Remember}: the most rigorous assessment is to apply the model to an ``unseen'' dataset
+\end{framed}}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Machine learning gone mad - The US tank experiment}
@@ -151,7 +189,7 @@
 \begin{itemize}\addtolength{\itemsep}{0.4\baselineskip}
 	\item \textbf{Data exploration} can reveal important characteristics in the data\\ 
 	e.g histograms, boxplots, scatter plot matrix (plot your raw data!)
-	\item Covariates with \textbf{little variability} should be discarded
+	\item Features/Predictors with \textbf{little variability} can be discarded
 	\item How are the predictors \textbf{correlated} to each other? 
 	\item Missing data - ignore or \textbf{impute}?
 	\item \textbf{Standardise} or \textbf{normalise} predictors with widely varying ranges
@@ -170,11 +208,11 @@
 	\item Some methods are more appropriate than others in certain domains:
 \end{itemize}
 \vfill
-\small
-\begin{description}
+\normalsize
+\begin{description}\addtolength{\itemsep}{0.4\baselineskip}
 		\item [Interpretability:] Decision trees or association rule learning
 		\item [Lots of independent features and data:] Na\"{i}ve bayes
-		\item [Knowledge of which features are correlated with each other:] Bayesian network
+		\item [Knowledge of dependencies between features:] Bayesian network
 		\item [Thousands of mixed categorical and continuous variables:] Random forests
 \end{description}
 \normalsize
@@ -187,44 +225,6 @@
 		\caption{Source: \href{http://scikit-learn.org/stable/tutorial/machine_learning_map/index.html}{scikit-learn.org}}
 	\end{center}
 \end{figure}
-\end{frame}
-%-------------------------------------------------------------------------------------------------%
-\begin{frame}{Selecting and validating models}
-Recall the bias-–variance tradeoff:
-\vfill
-\begin{center}
-	\includegraphics[width=0.333\textwidth]{polyFit1.pdf}
-	\includegraphics[width=0.333\textwidth]{polyFit3.pdf}
-	\includegraphics[width=0.333\textwidth]{polyFit12.pdf}
-\end{center}
-\vfill
-\textbf{How do we choose model complexity (model selection)?}\\
-\textbf{Once we choose it, how do we validate/assess it?}
-\end{frame}
-%-------------------------------------------------------------------------------------------------%
-\begin{frame}{Selecting and validating models}
-\begin{itemize}
-	\item<1-> Split data into three parts:
-	\begin{center}
-		\includegraphics<1->[width=0.5\textwidth]{datasets.png}
-		\\
-		\visible<2->{\includegraphics[width=0.5\textwidth]{trainvsval.pdf}}
-	\end{center}
-\end{itemize}
-\end{frame}
-%-------------------------------------------------------------------------------------------------%
-\begin{frame}{Selecting and validating models}
-\begin{itemize}
-	\item<1-> When data is limited use $k$-fold cross-validation to estimate test error
-	\vfill
-	\begin{center}
-		\includegraphics<1->[width=0.4\textwidth]{crossvalidation.png}
-	\end{center}
-\end{itemize}
-\visible<2->{\begin{framed}
-\vfill
-\textbf{Remember}: the most rigorous assessment is to apply the model to an ``unseen'' dataset
-\end{framed}}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \end{document}
