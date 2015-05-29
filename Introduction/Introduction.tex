@@ -7,6 +7,7 @@
 \documentclass[pdf]{beamer}
 \usepackage{textpos} % for logo placement in headline
 \usepackage[export]{adjustbox}
+\usepackage{framed} % to frame text
 \newif\ifplacelogo % Create a new conditional to avoid displaying logo on every slide
 \placelogotrue % Set it to true
 \mode<presentation>{\usetheme{Madrid}} % default Antibes Berlin Madrid Montpelier Ilmenau CambridgeUS Berkeley Singapore Copenhagen Malmoe Warsaw
@@ -23,7 +24,7 @@
 \subtitle{for the Life Sciences}
 \author{John Joseph Valletta}
 \date[1st-2nd June 2015]{1st-2nd June 2015}
-\institute[Penryn Campus]{University of Exeter, Penryn Campus, UK}
+\institute[]{University of Exeter, Penryn Campus, UK}
 % Logo
 \logo{\ifplacelogo\includegraphics[width=4cm,keepaspectratio, left]{logo2.pdf}\fi}
 \addtobeamertemplate{headline}{}{\ifplacelogo
@@ -42,19 +43,32 @@
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Housekeeping}
-\begin{itemize}
-	\item Who are we?
-	\item Timetable
-	\item Important Info
-	\item Contact emails
+\small
+\vspace{-0.6cm}
+\begin{itemize}\addtolength{\itemsep}{0.3\baselineskip}
+	\item To log onto computers on the Penryn campus you need to add the domain \textbf{isad}, for e.g isad\textbackslash jjv207
+	\item For Wi-Fi log on \textbf{UoE\_Secure} if you have University of Exeter credentials or \textbf{FXNET} otherwise
+	\item \textbf{All} catering will be served in the {\color{green} GREEN} seminar room situated one floor up from the Exchange Lecture Theatre
+	\item The IT Training Suite (lab sessions) is accessed from the main library entrance (same floor as the Lecture Theatre). Follow signs to IT Room (a right, then another right)  
+	\item The University would appreciate greatly if you do not bring food or drinks in the Exchange Lecture Theatre and IT Training Suite
+	\item If you get lost ask the locals or poke me on 07847222721 
 \end{itemize}
+\normalsize
+\end{frame}
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{Housekeeping}
+\begin{center}	
+	\includegraphics<1>[width=\textwidth]{day1Plan.pdf}
+	\includegraphics<2>[width=\textwidth]{day2Plan.pdf}
+\end{center}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Workshop learning outcomes}
-\begin{itemize}\addtolength{\itemsep}{0.5\baselineskip}
+\begin{itemize}\addtolength{\itemsep}{0.7\baselineskip}
 	\item Understand the key concepts and terminology used in the field of machine learning
-	\item Apply machine learning algorithms in R and apply them to your own datasets
-	\item Recognise practical issues in data analysis
+	\item Build predictive models for clustering and classification problems
+	\item Apply machine learning algorithms in R to a variety of real-world datasets
+	\item Recognise practical issues in data-driven modelling
 \end{itemize}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
@@ -82,8 +96,9 @@
 The infamous \textbf{Big Data}!
 \begin{center}	
 	\includegraphics<1>[width=\textwidth]{urbanLandCover.png}
-	\includegraphics<2>[width=\textwidth]{microArray.jpg}
+	\includegraphics<2>[width=0.9\textwidth]{microArray.jpg}
 \end{center}
+No. of observations $<<$ No. of predictors ($n << p$ problem)
 \end{frame}
 
 % Urban Land Cover
@@ -129,7 +144,7 @@ The infamous \textbf{Big Data}!
 \begin{frame}{What's the problem?}
 \begin{exampleblock}{Predicting fish species richness \vskip-1mm{\tiny Olden \textit{et al}. Q Rev Biol 2008, 83(2):171-193}}
 \begin{description}
-	\item[Features:] Lake surface area, shoreline perimeter, air temperature, precipitation and elevation
+	\item[Data:] Lake surface area, shoreline perimeter, air temperature, precipitation and elevation
 	% e.g mean = 5.3 --> average of 5.3 species for those particular conditions e.g area<=1.5km^2  
 	\item[Method:] Decision trees (supervised)
 \end{description}
@@ -142,7 +157,7 @@ The infamous \textbf{Big Data}!
 \begin{frame}{What's the problem?}
 \begin{exampleblock}{Detection of malarial parasites \vskip-1mm{\tiny Purwar \textit{et al}. Malar J 2011, 10:364}}
 \begin{description}
-	\item[Features:] Image intensity
+	\item[Data:] Image intensity
 	\item[Method:] Modified k-means clustering (unsupervised)
 \end{description}
 \begin{center}
@@ -155,7 +170,7 @@ The infamous \textbf{Big Data}!
 \begin{frame}{What's the problem?}
 \begin{exampleblock}{Creating carbon-density maps \vskip-1mm{\tiny Baccini \textit{et al}. Nature Clim. Change 2012, 2:182-185}}
 \begin{description}
-	\item[Features:] Light detection and ranging (LiDAR) (elevation data)
+	\item[Data:] Light detection and ranging (LiDAR) (elevation data)
 	\item[Method:] Random forests (ensemble of decision trees) (supervised)
 \end{description}
 \begin{center}
@@ -167,7 +182,7 @@ The infamous \textbf{Big Data}!
 \begin{frame}{What's the problem?}
 \begin{exampleblock}{Acoustic classification of multiple simultaneous bird species \vskip-1mm{\tiny Briggs \textit{et al}. J Acoust Soc Am 2012, 131(6):4640-4650}}
 \begin{description}
-	\item[Features:] Segments in spectrogram (time vs frequency) from 10 secs audio recordings (corresponding to syllables of bird call)
+	\item[Data:] Segments in spectrogram (time vs frequency) from 10 secs audio recordings (corresponding to syllables of bird call)
 	\item[Method:] Multi-instance multi-label learning (supervised)
 \end{description}
 \begin{center}
@@ -285,19 +300,16 @@ Inputs have \textit{no} corresponding output labels
 	\item<6-> \textbf{Dimensionality Reduction} - identify and remove redundant dimensions  
 \end{itemize}
 \column{0.35\textwidth}	
-\begin{center}
-	\visible<2->{\framezoom<2><3>(0.65\textwidth,0.85cm)(0.35\textwidth, 1cm) % (⟨upper left x⟩,⟨upper left y⟩) (⟨zoom area width⟩,⟨zoom area depth⟩)
-				\includegraphics[width=0.75\textwidth,keepaspectratio]{clustering.pdf}}
-	\vfill
-	\visible<4->{\framezoom<4><5>(0.65\textwidth, 3.594cm)(0.2\textwidth, 2.8cm)
-				 \includegraphics[width=0.75\textwidth,keepaspectratio]{densityEstimation.pdf}}
-	\vfill
-	\visible<6->{\framezoom<6><7>(0.65\textwidth, 5.58cm)(0.35\textwidth, 1cm)
-				 \includegraphics[width=0.75\textwidth,keepaspectratio]{PCA.pdf}}
+\begin{center}	
+\visible<2->{\framezoom<2><3>(0.65\textwidth,0.85cm)(0.35\textwidth, 1cm) % (⟨upper left x⟩,⟨upper left y⟩) (⟨zoom area width⟩,⟨zoom area depth⟩)
+			\includegraphics[width=0.75\textwidth,keepaspectratio]{clustering.pdf}}
+\visible<4->{\framezoom<4><5>[border=4](0.65\textwidth, 3.595cm)(0.35\textwidth, 1cm)%\framezoom<4><5>(0.65\textwidth, 3.594cm)(0.2\textwidth, 2.8cm)
+			\vspace{0.3cm}\includegraphics[width=0.75\textwidth,keepaspectratio]{densityEstimation.pdf}}
+\visible<6->{\framezoom<6><7>(0.65\textwidth, 5.88cm)(0.35\textwidth, 1cm)
+			 \includegraphics[width=0.73\textwidth,keepaspectratio]{PCA.pdf}}
 \end{center}
 \end{columns}
 \end{frame}
-
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Types of machine learning methods: Supervised learning}
 \vspace{0.5cm}
@@ -311,9 +323,9 @@ Inputs have corresponding output labels
 \end{itemize}
 \column{0.42\textwidth}	
 \begin{center}
-	\visible<2->{\includegraphics[width=1\textwidth]{classification.pdf}}
+	\visible<2->{\includegraphics[width=1\textwidth, keepaspectratio]{classification.pdf}}
 	\vfill
-	\visible<3->{\includegraphics[width=1\textwidth]{regression.pdf}}
+	\visible<3->{\includegraphics[width=1\textwidth, keepaspectratio]{regression.pdf}}
 \end{center}
 \end{columns}
 \end{frame}
@@ -369,6 +381,14 @@ Inputs have corresponding output labels
 \vskip5mm
 \hspace*\fill{\footnotesize --- Leo Breiman}
 \end{exampleblock}
+\vfill
+\begin{exampleblock}{}
+{\small \textbf{Machine learning} extends a scientist's toolbox to deal with the explosion of data that the life sciences have seen in recent years due to the changing nature of science and technology}
+\end{exampleblock}
+\vfill
+\begin{framed}
+The objective is not just to get a better fit to the data but to have a predictive model that \textit{generalises} well, that is, gives good predictions to \textit{unseen} data 
+\end{framed}
 \end{frame}
 %-------------------------------------------------------------------------------------------------%
 \begin{frame}{Terminology}
