@@ -137,8 +137,13 @@ NbClust(data=xData, distance="euclidean", min.nc=2, max.nc=10, method="kmeans", 
 #-----------------------------------------------------------------------------#
 # Classification figure for Introduction slides
 x <- seq(from=-5, to=5, by=0.01)
-plot(x, dnorm(x, mean=-1.5, sd=1), col="red", ylim=c(0, 0.45), lwd=4, type="l", 
-     xlab="antibody level", ylab="probability density")
-text(-1.5, 0.42, "susceptible", col="red")
-lines(x, dnorm(x, mean=1.5, sd=1), col="blue", lwd=4)
-text(1.5, 0.42, "protected", col="blue")
+kSize <- 2.5
+lwd <- 10
+pdf("classification.pdf", paper="a4r", width=11.69, height=8.27)
+par(mai=c(1, 1, 1, 1)) #c(bottom, left, top, right)
+plot(x, dnorm(x, mean=-1.5, sd=1), col="tomato2", ylim=c(0, 0.45), lwd=lwd, type="l", 
+     xlab="antibody level", ylab="probability density", cex.lab=kSize, cex.axis=kSize, cex.main=kSize, cex.sub=kSize,)
+text(-1.5, 0.42, "susceptible", col="tomato2", cex=kSize, font=2)
+lines(x, dnorm(x, mean=1.5, sd=1), col="skyblue", lwd=lwd, cex=kSize, font=2)
+text(1.5, 0.42, "protected", col="skyblue", cex=kSize, font=2)
+dev.off()
