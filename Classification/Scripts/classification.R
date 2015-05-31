@@ -49,9 +49,9 @@ for (i in c(1, 3, 12)) {
     lwd <- 8
     kSize <- 1.7
     plot(xSeq, sin(xSeq), col="grey", type="l", lwd=lwd, main=mainTitle, 
-         xlab="x", ylab="y", xlim=c(-3.2, 3.2), ylim=c(-1.7, 1.7), 
+         xlab="x", ylab="y", xlim=c(-3.2, 3.2), ylim=c(-1.5, 1.5), 
          cex.lab=kSize, cex.axis=kSize, cex.main=kSize, cex.sub=kSize, cex=kSize)
-    points(y ~ x, data=df, pch=16, col="black", cex=kSize)
+    points(y ~ x, data=df, pch=16, col="black", cex=kSize*1.5)
     lines(xSeq, predict(fit, newdata=xTest), col="blue", lwd=lwd, cex=kSize)
     legend("topleft", c("underlying function (true)", "observed data points", "model fit"), bty="n",
            col=c("grey", "black", "blue"), pch=c(NA, 16, NA), lwd=lwd, lty=c(1, NA, 1), cex=kSize)

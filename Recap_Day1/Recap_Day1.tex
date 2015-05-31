@@ -1,0 +1,73 @@
+%-------------------------------------------------------------------------------------------------%
+% Author: John Joseph Valletta
+% Date: 31/05/2015
+% Title: Recap Day 1
+%-------------------------------------------------------------------------------------------------%
+% Preamble
+\documentclass[pdf]{beamer}
+\usepackage{textpos} % for logo placement in headline
+\usepackage[export]{adjustbox}
+\usepackage{framed}
+%-------------------------------------------------------------------------------------------------%
+\newif\ifplacelogo % Create a new conditional to avoid displaying logo on every slide
+\placelogotrue % Set it to true
+\mode<presentation>{\usetheme{Madrid}} % default Antibes Berlin Madrid Montpelier Ilmenau CambridgeUS Berkeley Singapore Copenhagen Malmoe Warsaw
+\usecolortheme{dolphin}
+\useinnertheme{circles} % circles, rectanges, rounded, inmargin
+\usefonttheme[onlymath]{serif} % Makes math fonts like the usual LaTeX ones
+%\useoutertheme{tree} % infolines, smoothbars, sidebar, split, tree
+\setbeamercovered{transparent=5} % Transparent 10% overlays
+\setbeamertemplate{caption}{\raggedright\insertcaption\par} % Remove the word "Figure" from caption %\setbeamertemplate{caption}[default]
+\setbeamertemplate{navigation symbols}{} % don't put navigation tools at the bottom (alternatively \beamertemplatenavigationsymbolsempty)
+\graphicspath{ {./Figures/} }
+
+% Titlepage
+\title{Recap Day 1}
+\subtitle{}
+\author{John Joseph Valletta}
+\date[1st-2nd June 2015]{1st-2nd June 2015}
+\institute[]{University of Exeter, Penryn Campus, UK}
+% \logo{
+%   \makebox[0.95\paperwidth]{
+%     \includegraphics[width=4cm,keepaspectratio]{logo1.pdf}
+%     \hfill
+%     \includegraphics[width=4cm,keepaspectratio]{logo2.pdf}
+%   }
+% }
+% Logo
+\logo{\ifplacelogo\includegraphics[width=4cm,keepaspectratio, left]{logo2.pdf}\fi}
+\addtobeamertemplate{headline}{}{\ifplacelogo
+\begin{textblock*}{100mm}(.68\textwidth,+0.1cm)%.015 instead of 0.68 originally
+\includegraphics[width=4cm,keepaspectratio]{logo1.pdf}
+\end{textblock*}\fi}
+%\author{John Joseph Valletta, Alex Thornton and Mario Recker}
+%-------------------------------------------------------------------------------------------------%
+% Start of Document
+%-------------------------------------------------------------------------------------------------%
+\begin{document}
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}
+\titlepage
+\end{frame}
+\placelogofalse % Turn logo off
+%-------------------------------------------------------------------------------------------------%
+\begin{frame}{}
+\begin{center}
+		\includegraphics<1>[width=\textwidth]{Problem1Plot1.pdf}
+		\includegraphics<2>[width=\textwidth]{Problem2Plot1.pdf}
+		\includegraphics<3>[width=\textwidth]{Problem2Plot2.pdf}
+		\includegraphics<4>[width=\textwidth]{Problem2Plot3.pdf}
+		\includegraphics<5>[width=\textwidth]{Problem2Plot4.pdf}
+		\includegraphics<6>[width=\textwidth]{Problem2Plot5.pdf}
+		\includegraphics<7>[width=\textwidth]{Problem2Plot6.pdf}
+		\includegraphics<8>[width=\textwidth]{Problem3Plot1.pdf}
+		\includegraphics<9>[width=\textwidth]{Problem3Plot2.pdf}
+		\includegraphics<10>[width=\textwidth]{Problem3Plot3.pdf}
+\end{center}
+\end{frame}
+
+%-------------------------------------------------------------------------------------------------%
+\end{document}
+%-------------------------------------------------------------------------------------------------%
+% End of Document
+%-------------------------------------------------------------------------------------------------%

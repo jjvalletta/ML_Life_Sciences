@@ -42,8 +42,8 @@ plot(rmseTrain, type="o", pch=1, col="blue", lwd=lwd, xlim=c(0.8,10.2), ylim=c(-
      cex.lab=kSize, cex.axis=kSize, cex.main=kSize, cex.sub=kSize, cex=kSize)
 points(rmseVal, type="o", pch=1, col="red", lwd=lwd, cex=kSize)
 abline(h=0, col="grey", lwd=lwd, lty=2, cex=kSize)
-text(9, 0.13, "training", col="blue", cex=kSize, font=2)
-text(9, 0.295, "validation", col="red", cex=kSize, font=2)
+text(9, 0.135, "training", col="blue", cex=kSize, font=2)
+text(9, 0.3, "validation", col="red", cex=kSize, font=2)
 legend("topright", c("training dataset", "validation dataset"), bty="n",
        col=c("blue", "red"), pch=1, lwd=lwd, lty=1, cex=kSize)
 dev.off()
